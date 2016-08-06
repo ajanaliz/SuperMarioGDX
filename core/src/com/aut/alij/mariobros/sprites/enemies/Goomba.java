@@ -1,7 +1,9 @@
-package com.aut.alij.mariobros.sprites;
+package com.aut.alij.mariobros.sprites.enemies;
 
 import com.aut.alij.mariobros.MarioBros;
 import com.aut.alij.mariobros.screens.PlayScreen;
+import com.aut.alij.mariobros.sprites.Mario;
+import com.aut.alij.mariobros.sprites.enemies.Enemy;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -41,15 +43,15 @@ public class Goomba extends Enemy {
             destroyed = true;
             setRegion(new TextureRegion(screen.getAtlas().findRegion("goomba"), 32, 0, 16, 16));
             stateTime = 0;
-        }else if (!destroyed){
+        } else if (!destroyed) {
             body.setLinearVelocity(velocity);
             setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2);
             setRegion(walkAnimation.getKeyFrame(stateTime, true));
         }
     }
 
-    public void draw(Batch batch){
-        if (!destroyed || stateTime < 1){
+    public void draw(Batch batch) {
+        if (!destroyed || stateTime < 1) {
             super.draw(batch);
         }
     }
@@ -81,7 +83,15 @@ public class Goomba extends Enemy {
     }
 
     @Override
-    public void hitOnHead() {
+    public void onEnemyHit(Enemy enemy) {
+        if (enemy instanceof Turtle && ((Turtle) enemy).getCurrentState() == Turtle.State.MOVING_SHELL)
+            setToDestroy = true;
+        else
+            reverseVelocity(true,false);
+    }
+
+    @Override
+    public void hitOnHead(Mario mario) {
         MarioBros.manager.get("audio/sounds/stomp.wav", Sound.class).play();
         setToDestroy(true);
     }

@@ -1,8 +1,9 @@
-package com.aut.alij.mariobros.sprites;
+package com.aut.alij.mariobros.sprites.tileobjects;
 
 import com.aut.alij.mariobros.MarioBros;
 import com.aut.alij.mariobros.scenes.HUD;
 import com.aut.alij.mariobros.screens.PlayScreen;
+import com.aut.alij.mariobros.sprites.Mario;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.maps.MapObject;

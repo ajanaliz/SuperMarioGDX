@@ -2,9 +2,13 @@ package com.aut.alij.mariobros.sprites;
 
 import com.aut.alij.mariobros.MarioBros;
 import com.aut.alij.mariobros.screens.PlayScreen;
+import com.aut.alij.mariobros.sprites.enemies.Enemy;
+import com.aut.alij.mariobros.sprites.enemies.Turtle;
+import com.aut.alij.mariobros.sprites.others.FireBall;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -36,8 +40,11 @@ public class Mario extends Sprite {
     private boolean timeToDefineBigMario;
     private boolean timeToRedefineMario;
     private boolean marioIsDead;
+    private PlayScreen screen;
+    private Array<FireBall> fireballs;
 
     public Mario(PlayScreen screen) {
+        this.screen = screen;
         this.world = screen.getWorld();
         currentState = State.STANDING;
         previousState = State.STANDING;
@@ -65,6 +72,7 @@ public class Mario extends Sprite {
         bigMarioStand = new TextureRegion(screen.getAtlas().findRegion("big_mario"), 0, 0, 16, 32);
         setBounds(0, 0, 16 / MarioBros.PPM, 16 / MarioBros.PPM);
         setRegion(marioStand);
+        fireballs = new Array<FireBall>();
     }
 
     public void update(float dt) {
@@ -78,6 +86,11 @@ public class Mario extends Sprite {
             defineBigMario();
         if (timeToRedefineMario)
             reDefineMario();
+        for(FireBall  ball : fireballs) {
+            ball.update(dt);
+            if(ball.isDestroyed())
+                fireballs.removeValue(ball, true);
+        }
     }
 
     private TextureRegion getFrame(float dt) {
@@ -165,6 +178,15 @@ public class Mario extends Sprite {
 
         timeToRedefineMario = false;
     }
+    public void fire(){
+        fireballs.add(new FireBall(screen, body.getPosition().x, body.getPosition().y, runningRight ? true : false));
+    }
+
+    public void draw(Batch batch){
+        super.draw(batch);
+        for(FireBall ball : fireballs)
+            ball.draw(batch);
+    }
 
     private void defineBigMario() {
         Vector2 currentPosition = body.getPosition();
@@ -221,22 +243,26 @@ public class Mario extends Sprite {
         MarioBros.manager.get("audio/sounds/powerup.wav", Sound.class).play();
     }
 
-    public void hit() {
-        if (marioIsBig) {
-            marioIsBig = false;
-            timeToRedefineMario = true;
-            setBounds(getX(), getY(), getWidth(), getHeight() / 2);
-            MarioBros.manager.get("audio/sounds/powerdown.wav", Sound.class).play();
-        }else {
-            MarioBros.manager.get("audio/music/mario_music.ogg", Music.class).stop();
-            MarioBros.manager.get("audio/sounds/mariodie.wav", Sound.class).play();
-            marioIsDead = true;
-            Filter filter = new Filter();
-            filter.maskBits = MarioBros.NOTHING_BIT;
-            for (Fixture fixture: body.getFixtureList())
-                fixture.setFilterData(filter);
-            body.applyLinearImpulse(new Vector2(0, 4f),body.getWorldCenter(),true);
+    public void hit(Enemy enemy) {
+        if (enemy instanceof Turtle && ((Turtle) enemy).getCurrentState() == Turtle.State.STANDING_SHELL) {
+            ((Turtle) enemy).kick(this.getX() <= enemy.getX() ? Turtle.KICK_RIGHT_SPEED : Turtle.KICK_LEFT_SPEED);
+        } else {
+            if (marioIsBig) {
+                marioIsBig = false;
+                timeToRedefineMario = true;
+                setBounds(getX(), getY(), getWidth(), getHeight() / 2);
+                MarioBros.manager.get("audio/sounds/powerdown.wav", Sound.class).play();
+            } else {
+                MarioBros.manager.get("audio/music/mario_music.ogg", Music.class).stop();
+                MarioBros.manager.get("audio/sounds/mariodie.wav", Sound.class).play();
+                marioIsDead = true;
+                Filter filter = new Filter();
+                filter.maskBits = MarioBros.NOTHING_BIT;
+                for (Fixture fixture : body.getFixtureList())
+                    fixture.setFilterData(filter);
+                body.applyLinearImpulse(new Vector2(0, 4f), body.getWorldCenter(), true);
 
+            }
         }
     }
 

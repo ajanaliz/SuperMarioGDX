@@ -1,11 +1,11 @@
 package com.aut.alij.mariobros.screens;
 
 import com.aut.alij.mariobros.MarioBros;
-import com.aut.alij.mariobros.items.Item;
-import com.aut.alij.mariobros.items.ItemDef;
-import com.aut.alij.mariobros.items.Mushroom;
+import com.aut.alij.mariobros.sprites.items.Item;
+import com.aut.alij.mariobros.sprites.items.ItemDef;
+import com.aut.alij.mariobros.sprites.items.Mushroom;
 import com.aut.alij.mariobros.scenes.HUD;
-import com.aut.alij.mariobros.sprites.Enemy;
+import com.aut.alij.mariobros.sprites.enemies.Enemy;
 import com.aut.alij.mariobros.sprites.Mario;
 import com.aut.alij.mariobros.tools.B2WorldCreator;
 import com.aut.alij.mariobros.tools.WorldContactListener;
@@ -92,6 +92,8 @@ public class PlayScreen implements Screen {
                 mario.getBody().applyLinearImpulse(new Vector2(0.1f, 0), mario.getBody().getWorldCenter(), true);
             if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && mario.getBody().getLinearVelocity().x >= -2)
                 mario.getBody().applyLinearImpulse(new Vector2(-0.1f, 0), mario.getBody().getWorldCenter(), true);
+            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
+                mario.fire();
         }
 
     }
@@ -101,7 +103,7 @@ public class PlayScreen implements Screen {
         handleSpawningItems();
         world.step(1 / 60f, 6, 2);
         mario.update(dt);
-        for (Enemy enemy : creator.getGoombas()) {
+        for (Enemy enemy : creator.getEnemies()) {
             enemy.update(dt);
             if (enemy.getX() < mario.getX() + 224 / MarioBros.PPM)
                 enemy.getBody().setActive(true);
@@ -131,7 +133,7 @@ public class PlayScreen implements Screen {
         game.batch.setProjectionMatrix(gameCam.combined);
         game.batch.begin();
         mario.draw(game.batch);
-        for (Enemy enemy : creator.getGoombas())
+        for (Enemy enemy : creator.getEnemies())
             enemy.draw(game.batch);
         for (Item item : items) {
             item.draw(game.batch);

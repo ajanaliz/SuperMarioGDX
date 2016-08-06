@@ -1,8 +1,9 @@
-package com.aut.alij.mariobros.sprites;
+package com.aut.alij.mariobros.sprites.tileobjects;
 
 import com.aut.alij.mariobros.MarioBros;
-import com.aut.alij.mariobros.items.ItemDef;
-import com.aut.alij.mariobros.items.Mushroom;
+import com.aut.alij.mariobros.sprites.Mario;
+import com.aut.alij.mariobros.sprites.items.ItemDef;
+import com.aut.alij.mariobros.sprites.items.Mushroom;
 import com.aut.alij.mariobros.scenes.HUD;
 import com.aut.alij.mariobros.screens.PlayScreen;
 import com.badlogic.gdx.Gdx;

@@ -2,9 +2,11 @@ package com.aut.alij.mariobros.tools;
 
 import com.aut.alij.mariobros.MarioBros;
 import com.aut.alij.mariobros.screens.PlayScreen;
-import com.aut.alij.mariobros.sprites.Brick;
-import com.aut.alij.mariobros.sprites.Coin;
-import com.aut.alij.mariobros.sprites.Goomba;
+import com.aut.alij.mariobros.sprites.enemies.Enemy;
+import com.aut.alij.mariobros.sprites.enemies.Turtle;
+import com.aut.alij.mariobros.sprites.tileobjects.Brick;
+import com.aut.alij.mariobros.sprites.tileobjects.Coin;
+import com.aut.alij.mariobros.sprites.enemies.Goomba;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -18,6 +20,7 @@ import com.badlogic.gdx.utils.Array;
 public class B2WorldCreator {
 
     private Array<Goomba> goombas;
+    private Array<Turtle> turtles;
 
     public B2WorldCreator(PlayScreen screen){
         World world = screen.getWorld();
@@ -61,10 +64,21 @@ public class B2WorldCreator {
             Rectangle rectangle = ((RectangleMapObject) object).getRectangle();
             goombas.add(new Goomba(screen,rectangle.getX()/MarioBros.PPM,rectangle.getY()/MarioBros.PPM));
         }
+        turtles = new Array<Turtle>();
+        for (MapObject object : map.getLayers().get(7).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rectangle = ((RectangleMapObject) object).getRectangle();
+            turtles.add(new Turtle(screen,rectangle.getX()/MarioBros.PPM,rectangle.getY()/MarioBros.PPM));
+        }
     }
 
     public Array<Goomba> getGoombas() {
         return goombas;
+    }
+    public Array<Enemy> getEnemies(){
+        Array<Enemy> enemies = new Array<Enemy>();
+        enemies.addAll(goombas);
+        enemies.addAll(turtles);
+        return enemies;
     }
 
 }

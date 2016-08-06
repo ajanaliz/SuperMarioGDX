@@ -1,4 +1,4 @@
-package com.aut.alij.mariobros.items;
+package com.aut.alij.mariobros.sprites.items;
 
 import com.badlogic.gdx.math.Vector2;
 

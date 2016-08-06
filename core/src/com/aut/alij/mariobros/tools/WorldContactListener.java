@@ -1,11 +1,11 @@
 package com.aut.alij.mariobros.tools;
 
 import com.aut.alij.mariobros.MarioBros;
-import com.aut.alij.mariobros.items.Item;
-import com.aut.alij.mariobros.sprites.Enemy;
-import com.aut.alij.mariobros.sprites.InteractiveTileObject;
+import com.aut.alij.mariobros.sprites.items.Item;
+import com.aut.alij.mariobros.sprites.enemies.Enemy;
+import com.aut.alij.mariobros.sprites.others.FireBall;
+import com.aut.alij.mariobros.sprites.tileobjects.InteractiveTileObject;
 import com.aut.alij.mariobros.sprites.Mario;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.*;
 
 /**
@@ -29,9 +29,9 @@ public class WorldContactListener implements ContactListener {
                 break;
             case MarioBros.ENEMY_HEAD_BIT | MarioBros.MARIO_BIT:
                 if (fixA.getFilterData().categoryBits == MarioBros.ENEMY_HEAD_BIT)
-                    ((Enemy)fixA.getUserData()).hitOnHead();
+                    ((Enemy)fixA.getUserData()).hitOnHead((Mario) fixB.getUserData());
                 else
-                    ((Enemy)fixB.getUserData()).hitOnHead();
+                    ((Enemy)fixB.getUserData()).hitOnHead((Mario) fixA.getUserData());
                 break;
             case MarioBros.ENEMY_BIT | MarioBros.OBJECT_BIT:
                 if (fixA.getFilterData().categoryBits == MarioBros.ENEMY_BIT)
@@ -41,12 +41,12 @@ public class WorldContactListener implements ContactListener {
                 break;
             case MarioBros.MARIO_BIT | MarioBros.ENEMY_BIT:
                 if (fixA.getFilterData().categoryBits == MarioBros.MARIO_BIT)
-                    ((Mario) fixA.getUserData()).hit();
-                else ((Mario) fixB.getUserData()).hit();
+                    ((Mario) fixA.getUserData()).hit((Enemy)fixB.getUserData());
+                else ((Mario) fixB.getUserData()).hit((Enemy)fixA.getUserData());
                 break;
             case MarioBros.ENEMY_BIT | MarioBros.ENEMY_BIT:
-                ((Enemy)fixA.getUserData()).reverseVelocity(true,false);
-                ((Enemy)fixB.getUserData()).reverseVelocity(true,false);
+                ((Enemy)fixA.getUserData()).onEnemyHit((Enemy)fixB.getUserData());
+                ((Enemy)fixB.getUserData()).onEnemyHit((Enemy)fixA.getUserData());
                 break;
             case MarioBros.ITEM_BIT | MarioBros.OBJECT_BIT:
                 if (fixA.getFilterData().categoryBits == MarioBros.ITEM_BIT)
@@ -59,6 +59,12 @@ public class WorldContactListener implements ContactListener {
                     ((Item)fixA.getUserData()).useItem((Mario) fixB.getUserData());
                 else
                     ((Item)fixB.getUserData()).useItem((Mario) fixA.getUserData());
+                break;
+            case MarioBros.FIREBALL_BIT | MarioBros.OBJECT_BIT:
+                if(fixA.getFilterData().categoryBits == MarioBros.FIREBALL_BIT)
+                      ((FireBall)fixA.getUserData()).setToDestroy();
+                else
+                    ((FireBall)fixB.getUserData()).setToDestroy();
                 break;
         }
     }

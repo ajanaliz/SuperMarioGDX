@@ -1,7 +1,8 @@
-package com.aut.alij.mariobros.sprites;
+package com.aut.alij.mariobros.sprites.tileobjects;
 
 import com.aut.alij.mariobros.MarioBros;
 import com.aut.alij.mariobros.screens.PlayScreen;
+import com.aut.alij.mariobros.sprites.Mario;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
