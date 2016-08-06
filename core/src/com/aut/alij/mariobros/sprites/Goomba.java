@@ -2,6 +2,7 @@ package com.aut.alij.mariobros.sprites;
 
 import com.aut.alij.mariobros.MarioBros;
 import com.aut.alij.mariobros.screens.PlayScreen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -81,6 +82,7 @@ public class Goomba extends Enemy {
 
     @Override
     public void hitOnHead() {
+        MarioBros.manager.get("audio/sounds/stomp.wav", Sound.class).play();
         setToDestroy(true);
     }
 

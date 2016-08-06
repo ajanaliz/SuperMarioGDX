@@ -15,16 +15,16 @@ public abstract class Enemy extends Sprite {
     protected Body body;
     protected Vector2 velocity;
 
-    public Enemy(PlayScreen screen, float x, float y){
+    public Enemy(PlayScreen screen, float x, float y) {
         this.world = screen.getWorld();
         this.screen = screen;
-        setPosition(x,y);
+        setPosition(x, y);
         defineEnemy();
-        velocity = new Vector2(1,0);
+        velocity = new Vector2(1, 0);
         body.setActive(false);
     }
 
-    public void reverseVelocity(boolean x,boolean y){
+    public void reverseVelocity(boolean x, boolean y) {
         if (x)
             velocity.x *= -1;
         if (y)
@@ -32,7 +32,9 @@ public abstract class Enemy extends Sprite {
     }
 
     protected abstract void defineEnemy();
+
     public abstract void hitOnHead();
+
     public abstract void update(float dt);
 
     public World getWorld() {
