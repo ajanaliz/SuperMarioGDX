@@ -24,6 +24,7 @@ public class MarioBros extends Game {
 	public static final short OBJECT_BIT = 32;
 	public static final short ENEMY_BIT = 64;
 	public static final short ENEMY_HEAD_BIT = 128;
+	public static final short ITEM_BIT = 256;
 	/*WARNING: USING ASSET MANAGER IN A STATIC WAY WILL SCREW EVERYTHING UP IN ANDROID*/
 	public static AssetManager manager;
 	public SpriteBatch batch;
@@ -36,6 +37,7 @@ public class MarioBros extends Game {
 		manager.load("audio/sounds/coin.wav", Sound.class);
 		manager.load("audio/sounds/bump.wav", Sound.class);
 		manager.load("audio/sounds/breakblock.wav", Sound.class);
+		manager.load("audio/sounds/powerup_spawn.wav", Sound.class);
 		manager.finishLoading();
 		setScreen(new PlayScreen(this));
 	}

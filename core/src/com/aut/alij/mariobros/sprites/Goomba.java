@@ -3,6 +3,7 @@ package com.aut.alij.mariobros.sprites;
 import com.aut.alij.mariobros.MarioBros;
 import com.aut.alij.mariobros.screens.PlayScreen;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -38,9 +39,17 @@ public class Goomba extends Enemy {
             world.destroyBody(body);
             destroyed = true;
             setRegion(new TextureRegion(screen.getAtlas().findRegion("goomba"), 32, 0, 16, 16));
+            stateTime = 0;
         }else if (!destroyed){
+            body.setLinearVelocity(velocity);
             setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2);
             setRegion(walkAnimation.getKeyFrame(stateTime, true));
+        }
+    }
+
+    public void draw(Batch batch){
+        if (!destroyed || stateTime < 1){
+            super.draw(batch);
         }
     }
 
@@ -56,7 +65,7 @@ public class Goomba extends Enemy {
         fixtureDef.filter.categoryBits = MarioBros.ENEMY_BIT;
         fixtureDef.filter.maskBits = MarioBros.GROUND_BIT | MarioBros.COIN_BIT | MarioBros.BRICK_BIT | MarioBros.ENEMY_BIT | MarioBros.OBJECT_BIT | MarioBros.MARIO_BIT;
         fixtureDef.shape = shape;
-        body.createFixture(fixtureDef);
+        body.createFixture(fixtureDef).setUserData(this);
         PolygonShape head = new PolygonShape();
         Vector2[] vertices = new Vector2[4];
         vertices[0] = new Vector2(-5, 8).scl(1 / MarioBros.PPM);
